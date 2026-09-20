@@ -1,0 +1,34 @@
+class Solution {
+    public int[] maxSubsequence(int[] nums, int k) {
+
+        PriorityQueue<Integer> pq =
+            new PriorityQueue<>((a, b) -> nums[a] - nums[b]);
+
+        for(int i = 0; i < nums.length; i++){
+
+            pq.add(i);
+
+            if(pq.size() > k){
+                pq.poll();
+            }
+        }
+
+        boolean[] selected = new boolean[nums.length];
+
+        while(!pq.isEmpty()){
+            selected[pq.poll()] = true;
+        }
+
+        int[] ans = new int[k];
+        int index = 0;
+
+        for(int i = 0; i < nums.length; i++){
+            if(selected[i]){
+                ans[index] = nums[i];
+                index++;
+            }
+        }
+
+        return ans;
+    }
+}
