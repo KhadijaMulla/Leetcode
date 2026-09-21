@@ -1,0 +1,48 @@
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+
+        long[] ugly = new long[n];
+        ugly[0] = 1;
+
+        PriorityQueue<long[]> pq = new PriorityQueue<>(
+            (a, b) -> Long.compare(a[0], b[0])
+        );
+
+        for(int p : primes){
+            pq.add(new long[]{p, p, 0});
+        }
+
+        for(int i = 1; i < n; i++){
+
+            long[] current = pq.poll();
+
+            ugly[i] = current[0];
+
+            while(!pq.isEmpty() && pq.peek()[0] == ugly[i]){
+                long[] duplicate = pq.poll();
+
+                int index = (int)duplicate[2] + 1;
+
+                if(index < n){
+                    pq.add(new long[]{
+                        duplicate[1] * ugly[index],
+                        duplicate[1],
+                        index
+                    });
+                }
+            }
+
+            int index = (int)current[2] + 1;
+
+            if(index < n){
+                pq.add(new long[]{
+                    current[1] * ugly[index],
+                    current[1],
+                    index
+                });
+            }
+        }
+
+        return (int)ugly[n - 1];
+    }
+}
