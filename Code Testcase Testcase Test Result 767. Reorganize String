@@ -1,0 +1,56 @@
+class Solution {
+    public String reorganizeString(String s) {
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> b[1] - a[1]
+        );
+
+        HashMap<Character, Integer> map = new HashMap<>();
+
+        for(char ch : s.toCharArray()){
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+
+        for(char ch : map.keySet()){
+            pq.add(new int[]{ch, map.get(ch)});
+        }
+
+        StringBuilder ans = new StringBuilder();
+
+        while(!pq.isEmpty()) {
+
+            int[] first = pq.poll();
+
+            if(ans.length() == 0 || ans.charAt(ans.length() - 1) != (char)first[0]) {
+
+                ans.append((char)first[0]);
+
+                first[1]--;
+
+                if(first[1] > 0){
+                    pq.add(first);
+                }
+
+            } else {
+
+                if(pq.isEmpty()){
+                    return "";
+                }
+
+                int[] second = pq.poll();
+
+                ans.append((char)second[0]);
+
+                second[1]--;
+
+                if(second[1] > 0){
+                    pq.add(second);
+                }
+
+                pq.add(first);
+            }
+        }
+
+        return ans.toString();
+    }
+}
